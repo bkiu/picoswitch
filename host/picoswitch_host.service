@@ -1,0 +1,16 @@
+[Unit]
+Description=PicoSwitch host daemon
+After=network.target podman.service
+Wants=podman.service
+
+[Service]
+Type=simple
+# Update the paths and user below to match your installation
+ExecStart=/usr/bin/python3 -u /opt/picoswitch/host/picoswitch_host.py
+Restart=on-failure
+RestartSec=5
+User=%i
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+
+[Install]
+WantedBy=multi-user.target
