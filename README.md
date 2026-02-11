@@ -21,8 +21,8 @@ GND           ──────  GND  (Pin 38)
 SPDT Switch           Pico WH
 ───────────           ─────────
 Throw A (ON)  ──────  (not connected)
-Common        ──────  GP15 (Pin 20)
-Throw B (OFF) ──────  GND  (Pin 18)
+Common        ──────  GP2  (Pin 4)
+Throw B (OFF) ──────  GND  (Pin 3)
 ```
 
 The switch uses the Pico's internal pull-up resistor: when the common pin is unconnected (ON position), GP15 reads HIGH. When grounded (OFF position), it reads LOW.

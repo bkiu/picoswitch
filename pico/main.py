@@ -7,7 +7,7 @@ from machine import Pin, I2C
 from lcd_i2c import LCD
 
 # --- Hardware setup ---
-SWITCH_PIN = 15
+SWITCH_PIN = 2
 I2C_SDA = 0
 I2C_SCL = 1
 

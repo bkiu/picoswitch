@@ -73,9 +73,15 @@ def get_vram_usage():
              "--format=csv,noheader,nounits"],
             capture_output=True, text=True, timeout=5
         )
-        line = result.stdout.strip().split("\n")[0]
-        used, total = [int(x.strip()) for x in line.split(",")]
-        return used, total
+        used_total = 0
+        total_total = 0
+        for line in result.stdout.strip().split("\n"):
+            if not line.strip():
+                continue
+            used, total = [int(x.strip()) for x in line.split(",")]
+            used_total += used
+            total_total += total
+        return used_total, total_total
     except Exception:
         return 0, 0
 
