@@ -1,16 +1,28 @@
+# Generic systemd unit. On NixOS do not copy this file -- declare the service,
+# the udev rule and the dialout membership in your configuration instead; see
+# the NixOS section of README.md.
+#
+# Edit User=, the ExecStart paths and PICOSWITCH_* to match your install, then:
+#   sudo cp picoswitch_host.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now picoswitch_host
+
 [Unit]
 Description=PicoSwitch host daemon
-After=network.target podman.service
-Wants=podman.service
+# docker.service, not podman.service: the daemon prefers docker and this is
+# what it talks to on a stock install. Swap both lines if you run podman.
+After=network.target docker.service
+Wants=docker.service
 
 [Service]
 Type=simple
-# Update the paths and user below to match your installation
+# User=%i only expands in a template unit (picoswitch_host@.service). In a
+# plain unit systemd rejects it, so name the account literally.
+User=youruser
 ExecStart=/usr/bin/python3 -u /opt/picoswitch/host/picoswitch_host.py
-Restart=on-failure
+Environment=PICOSWITCH_CONTAINER=clef-flash
+Environment=PICOSWITCH_COMPOSE_FILE=/home/youruser/projects/clef-flash/docker-compose.yml
+Restart=always
 RestartSec=5
-User=%i
-Environment=PATH=/usr/local/bin:/usr/bin:/bin
 
 [Install]
 WantedBy=multi-user.target

@@ -41,13 +41,23 @@ class LCD:
         self._init_display()
 
     def _scan(self):
+        """Find the PCF8574. 0x27 and 0x3F cover almost every 1602 backpack.
+
+        Falls back to the first device on the bus, which is right when the
+        backpack uses an unusual address and harmless here because the LCD is
+        the only thing wired to I2C0. The error names what was actually seen so
+        a wiring fault is distinguishable from an address surprise.
+        """
         devices = self.i2c.scan()
         for a in (0x27, 0x3F):
             if a in devices:
                 return a
         if devices:
             return devices[0]
-        raise OSError("No I2C device found")
+        raise OSError(
+            "No I2C device on SDA=GP0/SCL=GP1 - check VCC/GND and that the "
+            "backpack is on I2C0 (scan returned {})".format(devices)
+        )
 
     def _write_byte(self, val):
         self.i2c.writeto(self.addr, bytes([val | self.backlight]))
